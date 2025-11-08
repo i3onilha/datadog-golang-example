@@ -1,0 +1,15 @@
+version: '3'
+services:
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:latest
+    environment:
+      - DD_API_KEY=YOUR_DATADOG_API_KEY
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_ENV=dev
+    ports:
+      - "8126:8126/tcp" # APM port
+      - "8125:8125/udp" # DogStatsD metrics
+      - "5000:5000"     # optional for agent web UI
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

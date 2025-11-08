@@ -1,0 +1,103 @@
+### Variables
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Health Check
+GET {{baseUrl}}/ping
+
+### Create User - POST /api/v1/users
+POST {{baseUrl}}/api/v1/users
+Content-Type: {{contentType}}
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "age": 30
+}
+
+### Create Another User
+POST {{baseUrl}}/api/v1/users
+Content-Type: {{contentType}}
+
+{
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "age": 28
+}
+
+### Get All Users - GET /api/v1/users
+GET {{baseUrl}}/api/v1/users
+
+### Get User by ID - GET /api/v1/users/:id
+# Replace {userId} with an actual user ID from the create response
+@userId = 507f1f77bcf86cd799439011
+GET {{baseUrl}}/api/v1/users/{{userId}}
+
+### Update User - PUT /api/v1/users/:id
+# Replace {userId} with an actual user ID
+PUT {{baseUrl}}/api/v1/users/{{userId}}
+Content-Type: {{contentType}}
+
+{
+  "name": "John Updated",
+  "email": "john.updated@example.com",
+  "age": 31
+}
+
+### Partial Update User (only name)
+PUT {{baseUrl}}/api/v1/users/{{userId}}
+Content-Type: {{contentType}}
+
+{
+  "name": "John Partial Update"
+}
+
+### Partial Update User (only age)
+PUT {{baseUrl}}/api/v1/users/{{userId}}
+Content-Type: {{contentType}}
+
+{
+  "age": 32
+}
+
+### Delete User - DELETE /api/v1/users/:id
+# Replace {userId} with an actual user ID
+DELETE {{baseUrl}}/api/v1/users/{{userId}}
+
+### Error Cases
+
+### Create User with Invalid Email
+POST {{baseUrl}}/api/v1/users
+Content-Type: {{contentType}}
+
+{
+  "name": "Invalid User",
+  "email": "invalid-email",
+  "age": 25
+}
+
+### Create User with Missing Required Fields
+POST {{baseUrl}}/api/v1/users
+Content-Type: {{contentType}}
+
+{
+  "name": "Incomplete User"
+}
+
+### Get User with Invalid ID
+GET {{baseUrl}}/api/v1/users/invalid-id
+
+### Get User with Non-existent ID
+GET {{baseUrl}}/api/v1/users/507f1f77bcf86cd799439999
+
+### Update User with Invalid ID
+PUT {{baseUrl}}/api/v1/users/invalid-id
+Content-Type: {{contentType}}
+
+{
+  "name": "Test"
+}
+
+### Delete User with Invalid ID
+DELETE {{baseUrl}}/api/v1/users/invalid-id
+

@@ -1,10 +1,42 @@
 version: '3'
 services:
+  go-app:
+    container_name: go-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DD_AGENT_HOST=host.docker.internal
+      - DD_TRACE_AGENT_PORT=8126
+      - DD_ENV=dev
+      - DD_SERVICE=go-api-demo
+      - DD_VERSION=1.0.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - datadog-agent
+    networks:
+      - datadog-network
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - datadog-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
   datadog-agent:
     image: gcr.io/datadoghq/agent:latest
     environment:
       - DD_API_KEY=YOUR_DATADOG_API_KEY
       - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
       - DD_LOGS_ENABLED=true
       - DD_ENV=dev
     ports:
@@ -13,3 +45,12 @@ services:
       - "5000:5000"     # optional for agent web UI
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - datadog-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  datadog-network:
+    driver: bridge
